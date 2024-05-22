@@ -11,7 +11,7 @@ license = "AGPL"
 readme = "../README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
+python = ">=3.9,<3.9.7 || >3.9.7,<3.12"
 pyaudio = "^0.2.14"
 pynput = "^1.7.6"
 fastapi = "^0.110.0"
@@ -28,12 +28,13 @@ psutil = "^5.9.8"
 typer = "^0.9.0"
 platformdirs = "^4.2.0"
 rich = "^13.7.1"
-open-interpreter = {extras = ["os"], version = "^0.2.4"}
+open-interpreter = { git = "https://github.com/Merlinvt/open-interpreter" }
 dateparser = "^1.2.0"
 pytimeparse = "^1.1.8"
 python-crontab = "^3.0.0"
 inquirer = "^3.2.4"
 pyqrcode = "^1.2.1"
+litellm = { git = "https://github.com/Merlinvt/litellm" }
 
 [build-system]
 requires = ["poetry-core"]

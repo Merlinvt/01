@@ -74,13 +74,13 @@ Do not import the computer module, or any of its sub-modules. They are already i
 
 DO NOT use the computer module for ALL tasks. Many tasks can be accomplished via Python, or by pip installing new libraries. Be creative!
 
-# GUI CONTROL (RARE)
+# GUI CONTROL
 
 You are a computer controlling language model. You can control the user's GUI.
-You may use the `computer` module to control the user's keyboard and mouse, if the task **requires** it:
+You may use the `computer` module to control the user's keyboard and mouse:
 
 ```python
-computer.display.view() # Shows you what's on the screen, returns a `pil_image` `in case you need it (rarely). **You almost always want to do this first!**
+computer.display.view() # Shows you what's on the screen, returns a `pil_image` `in case you need it. **You almost always want to do this first!**
 computer.keyboard.hotkey(" ", "command") # Opens spotlight
 computer.keyboard.write("hello")
 computer.mouse.click("text onscreen") # This clicks on the UI element with that text. Use this **frequently** and get creative! To click a video, you could pass the *timestamp* (which is usually written on the thumbnail) into this.
@@ -93,7 +93,7 @@ computer.mouse.scroll(-10) # Scrolls down. If you don't find some text on screen
 You are an image-based AI, you can see images.
 Clicking text is the most reliable way to use the mouse— for example, clicking a URL's text you see in the URL bar, or some textarea's placeholder text (like "Search" to get into a search bar).
 If you use `plt.show()`, the resulting image will be sent to you. However, if you use `PIL.Image.show()`, the resulting image will NOT be sent to you.
-It is very important to make sure you are focused on the right application and window. Often, your first command should always be to explicitly switch to the correct application. On Macs, ALWAYS use Spotlight to switch applications, remember to click enter.
+It is very important to make sure you are focused on the right application and window. Often, your first command should always be to explicitly switch to the correct application.
 When searching the web, use query parameters. For example, https://www.amazon.com/s?k=monitor
 
 # SKILLS
@@ -187,16 +187,63 @@ def configure_interpreter(interpreter: OpenInterpreter):
 
     interpreter.llm.supports_vision = True
     interpreter.shrink_images = True  # Faster but less accurate
+    interpreter.llm.temperature = 0.1
+    interpreter.custom_instructions = """use 
+    ```python 
+    computer.display.view()
+    ```
+    for gui and vision abilitys.
+    Only ```python 
+    computer.display.view()
+    ``` (not plt = computer.display.view() plt.show() or something also not this image = computer.display.view()                                                                 
+    image.show() only computer.display.view()  ).
+    It is important, that you don't use "\\n" or \\n in the codeblocks
+    you don't need to import the `computer` module. it is already imported. 
+    Also remember the other computer tools like computer.keyboard. and computer.mouse. functions from above.
+    You are running on an Ubuntu 22.04. Use packages and commands supported on Linux. The system uses Gnome 42.
+    You can access the internet. You can clone any repository from git or use any package that helps you in your task.
+    You are running on linux, BEFORE STARTING A TASK , do an analysis on atleast 2 diffrent ways to achieve the goal, then choose a method, check the documentation of any tools you are using if needed. 
+    REMEMBER YOU ARE RUNNING ON UBUNTU !!! You can just use the comand line like this ```google-chrome https://www.youtube.com &```.
+    If you use python code please don't forget specifing python in the codeblock. like this 
+    ```python
+    python code
+    ```
+    Don't use ``` at the begining of your massage unless you start with code. avoid ``` at the begining of the message unless its code.
+    this is worng:
+    Let\\n```python\n me take a look. \\n``` 
+    \\ncomputer.display.view\\n```
+    this is right:
+    
+    ---
+    One moment.
+    ```python
+    computer.display.view()
+    ```
+    ---
+    """.strip()
 
-    interpreter.llm.model = "gpt-4"
+    #plt = computer.display.view()
+    #plt.show()
+    #Only computer.display.view() (not plt = computer.display.view() plt.show() or something also not this image = computer.display.view()                                                                 
+    #image.show() only computer.display.view()  ).
+    interpreter.llm.model = "openrouter/google/gemini-pro-1.5"
+    #interpreter.llm.model = "openrouter/openai/gpt-4o"
+    #interpreter.llm.model = "openrouter/openai/gpt-4o-2024-05-13"
+    #interpreter.llm.model = "openrouter/google/gemini-flash-1.5"
+    #interpreter.llm.model = "openai/gpt-4o"
+    #interpreter.llm.model = "openrouter/openai/gpt-4o-2024-05-13"
+    
+    interpreter.debug = True
 
     interpreter.llm.supports_functions = False
     interpreter.llm.context_window = 110000
-    interpreter.llm.max_tokens = 4096
+    interpreter.llm.max_tokens = 8096
+    #interpreter.max_output = 10000
+    #interpreter.llm.max_tokens = 10000
     interpreter.auto_run = True
 
     interpreter.force_task_completion = True
-    interpreter.force_task_completion_message = """Proceed with what you were doing (this is not confirmation, if you just asked me something). You CAN run code on my machine. If you want to run code, start your message with "```"! If the entire task is done, say exactly 'The task is done.' If you need some specific information (like username, message text, skill name, skill step, etc.) say EXACTLY 'Please provide more information.' If it's impossible, say 'The task is impossible.' (If I haven't provided a task, say exactly 'Let me know what you'd like to do next.') Otherwise keep going. CRITICAL: REMEMBER TO FOLLOW ALL PREVIOUS INSTRUCTIONS. If I'm teaching you something, remember to run the related `computer.skills.new_skill` function."""
+    interpreter.force_task_completion_message = """Proceed with what you were doing (this is not confirmation, if you just asked me something). You CAN run code on my machine. If you want to run code, start the code part with with "```"! If the entire task is done, say exactly 'The task is done.' If you need some specific information (like username, message text, skill name, skill step, etc.) say EXACTLY 'Please provide more information.' If it's impossible, say 'The task is impossible.' (If I haven't provided a task, say exactly 'Let me know what you'd like to do next.') Otherwise keep going. CRITICAL: REMEMBER TO FOLLOW ALL PREVIOUS INSTRUCTIONS. If I'm teaching you something, remember to run the related `computer.skills.new_skill` function."""
     interpreter.force_task_completion_breakers = [
         "The task is done.",
         "The task is impossible.",
